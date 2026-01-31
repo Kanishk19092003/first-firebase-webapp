@@ -2,6 +2,7 @@
 import {app} from "./firebase";
 import {createUserWithEmailAndPassword, getAuth} from "firebase/auth"; //For authorization
 import Signup from "./pages/Signup";
+import SignIn from "./pages/SignIn";
 
 
 //For realtime database
@@ -35,7 +36,9 @@ function App() {
       <h1>Firebase Project</h1>
       {/* <button onClick={putData}>Put Data</button> */}
       <button onClick={signupUser}>Create user</button>
-      <Signup/>
+      {/* <Signup/> */}
+      <SignIn/>
+      
     </>
   )
 }
