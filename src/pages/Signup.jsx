@@ -1,28 +1,54 @@
-import { getAuth , createUserWithEmailAndPassword } from "firebase/auth";
-import { app } from "../firebase";
 import { useState } from "react";
-
-const auth = getAuth(app);
+import { useFirebase } from "../Context/Firebase";
 
 const Signup = () => {
+  const firebase = useFirebase();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    const [email,setEmail] = useState('');
-    const [password,setPassword] = useState('');
+  const createUser = async () => {
+    try {
+      const result = await firebase.signupUserWithEmailAndPassword(email, password);
 
-    const createUser = ()=>{
-        createUserWithEmailAndPassword(auth,email,password).then(()=> alert("sucess"));
+      await firebase.putData(`users/${result.user.uid}`, {
+        email: result.user.email,
+        uid: result.user.uid,
+      });
+
+      alert("Signup Successful");
+    } catch (error) {
+      alert(error.message);
     }
+  };
+
+  const handleGoogleSignup = () => {
+   firebase.signupWithGoogle();
+
+  };
 
   return (
     <div>
-        <h1>SignUp Page</h1>
-        <label>email</label>
-        <input onChange={(e)=> setEmail(e.target.value)} value={email} type="email" required placeholder="Enter your Email"/>
-         <label>password</label>
-        <input onChange={(e)=> setPassword(e.target.value)} value={password} type="password" required placeholder="Enter your password"/>
-        <button onClick={createUser}>SignUp</button>
+      <h1>SignUp Page</h1>
+
+      <input
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        type="email"
+        placeholder="Email"
+      />
+
+      <input
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        type="password"
+        placeholder="Password"
+      />
+
+      <button onClick={createUser}>Sign Up</button>
+      <br />
+      <button onClick={handleGoogleSignup}>Sign up With Google</button>
     </div>
-  )
-}
+  );
+};
 
 export default Signup;

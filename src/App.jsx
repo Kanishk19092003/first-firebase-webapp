@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useFirebase } from "./Context/Firebase";
+import Signup from "./pages/Signup";
 
 function App() {
 
@@ -15,6 +16,8 @@ function App() {
     <input onChange={(e)=>setEmail(e.target.value)} value={email} type="email" placeholder="Enter Email"/>
     <input onChange={(e)=>setPassword(e.target.value)} value={password} type="password" placeholder="Enter Password"/>
     <button onClick={()=>{firebase.signupUserWithEmailAndPassword(email,password)}}>Submit</button>
+
+    <Signup/>
   </>);
 }
 

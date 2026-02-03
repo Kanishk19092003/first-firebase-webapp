@@ -1,6 +1,6 @@
-import { Children, createContext, useContext } from "react";
 import {initializeApp} from "firebase/app";
-import {createUserWithEmailAndPassword, getAuth} from "firebase/auth";
+import {createContext, useContext } from "react";
+import {createUserWithEmailAndPassword, getAuth,GoogleAuthProvider,signInWithPopup} from "firebase/auth";
 import { getDatabase,set,ref } from "firebase/database";
 
 
@@ -16,7 +16,9 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const firebaseAuth = getAuth(firebaseApp);//for authetication
-const database = getDatabase(firebaseApp)//for database
+const database = getDatabase(firebaseApp);//for database
+
+const googleProvider = new GoogleAuthProvider();
 
 const FirebaseContext = createContext(null);
 
@@ -24,7 +26,7 @@ const FirebaseContext = createContext(null);
 // eslint-disable-next-line react-refresh/only-export-components
 export const useFirebase = ()=> useContext(FirebaseContext);
 
-export const FirebaseProvider = (props)=>{
+export const FirebaseProvider = ({children})=>{
     
     //sign up
     const signupUserWithEmailAndPassword = (email,password)=>{
@@ -33,10 +35,15 @@ export const FirebaseProvider = (props)=>{
 
     //entering data to ?
     const putData = (key,data) =>set(ref(database,key), data);
+
+    //sign up with google
+    const signupWithGoogle = () =>{
+       return signInWithPopup(firebaseAuth,googleProvider);
+    }
     
     return(
-        <FirebaseContext.Provider value={{signupUserWithEmailAndPassword,putData}}>
-            {props.children}
+        <FirebaseContext.Provider value={{signupUserWithEmailAndPassword,putData,signupWithGoogle}}>
+            {children}
         </FirebaseContext.Provider>
     )
 }
